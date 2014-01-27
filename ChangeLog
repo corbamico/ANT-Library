@@ -1,0 +1,5 @@
+1.change dsi_thread_posix.c
+From:
+#if defined(DSI_TYPES_MACINTOSH)
+To:
+#if defined(DSI_TYPES_MACINTOSH)  || defined(DSI_TYPES_LINUX)
