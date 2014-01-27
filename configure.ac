@@ -15,6 +15,15 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
+AC_CHECK_LIB(pthread, pthread_kill,[],
+[
+  AC_MSG_ERROR([Could  not find pthread library])
+]) 
+
+AC_CHECK_LIB(usb-1.0, libusb_init,[],
+[
+  AC_MSG_ERROR([Could  not find libusb-1.0 library])
+]) 
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h limits.h paths.h stdint.h stdlib.h string.h sys/file.h sys/ioctl.h sys/param.h sys/time.h termios.h unistd.h])

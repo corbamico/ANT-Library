@@ -30,6 +30,7 @@
 #include "macros.h"
 #include "usb_device.hpp"
 #include <string.h>
+#include <libusb.h>
 
 class USBDeviceLinux: public USBDevice
 {
@@ -58,14 +59,25 @@ class USBDeviceLinux: public USBDevice
    DeviceType::Enum GetDeviceType() const {return DeviceType::LIBUSB;} //!!Or we could use a private enum!
    
    BOOL USBReset() const {return TRUE;} //!!Should we change this to USBReEnumerate()?
-   USBDeviceLinux(){}
+   USBDeviceLinux(libusb_device_handle* dev_handle)
+	{
+		libusb_device_descriptor desc;
+		libusb_device * dev;
+		
+		dev = libusb_get_device (dev_handle	); 
+		libusb_get_device_descriptor (dev, &desc);
+		
+		usVid = desc.idVendor;
+		usPid = desc.idProduct;
+		ulSerialNumber = desc.iSerialNumber;
+	}
    
 private:
 
    
    USHORT usVid;
    USHORT usPid;
-   ULONG ulSerialNumber;
+   ULONG  ulSerialNumber;
 
    UCHAR szProductDescription[USB_MAX_STRLEN];
    UCHAR szSerialString[USB_MAX_STRLEN];

@@ -127,7 +127,7 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld
 LDFLAGS = 
 LIBOBJS = 
-LIBS = 
+LIBS = -lusb-1.0 -lpthread 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -209,7 +209,7 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 demo_SOURCES = demo.cpp
-demo_LDADD = ../ANT_LIB/libant.a -lpthread 
+demo_LDADD = ../ANT_LIB/libant.a 
 AM_CPPFLAGS = $(INCLUDES) -I../m4
 all: all-am
 

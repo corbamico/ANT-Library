@@ -164,7 +164,7 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /usr/bin/ld
 LDFLAGS = 
 LIBOBJS = 
-LIBS = 
+LIBS = -lusb-1.0 -lpthread 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -256,7 +256,8 @@ INCLUDES = -I$(LIB_SRCDIR)/inc \
             -I$(LIB_SRCDIR)/software/USB \
             -I$(LIB_SRCDIR)/software/USB/devices \
             -I$(LIB_SRCDIR)/software/USB/device_handles \
-            -I$(LIB_SRCDIR)/software/USB/iokit_driver
+            -I$(LIB_SRCDIR)/software/USB/iokit_driver \
+            -I/usr/include/libusb-1.0
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
