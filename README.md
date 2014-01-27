@@ -3,20 +3,19 @@
 ===============================================================================
 ANT/ANTFS library port to linux. ANT+ is the wireless technology, used by (garmin or other health monitoring devices)
 
-Notes: 
+Notes: Source under development,only can be compiled as empty framework, NOT working.
 -------
-Source under development,only can be compiled as empty framework, NOT working.
 
 General
 -------
-from http://www.thisisant.com
-    + ANT+ is the wireless technology that allows your monitoring devices to talk to each other. Leading brands design ANT+ into top products to ensure that you get the data you want -  when and where you want it. Fundamentally, ANT+ gives you the simplest, most expandable and most reliable user experience possible.
+		From http://www.thisisant.com
+		ANT+ is the wireless technology that allows your monitoring devices to talk to each other. Leading brands design ANT+ into top products to ensure that you get the data you want -  when and where you want it. Fundamentally, ANT+ gives you the simplest, most expandable and most reliable user experience possible.
 
-    + ANT+ stands for interoperability which means that ANT+ products from multiple brands work together. Plus, because devices are compatible, you can always add to or update your monitoring system.
+		ANT+ stands for interoperability which means that ANT+ products from multiple brands work together. Plus, because devices are compatible, you can always add to or update your monitoring system.
 
-    + Library in Linux is not officially supported by Dynastream Innovations Inc. I try to port it to Linux from mac libant source (download from thisisant.com)
+		Library in Linux is not officially supported by Dynastream Innovations Inc. I try to port it to Linux from mac libant source (download from thisisant.com)
 
-    + I am not sure I can upload the modified source code or not, statement from Dynastream Innovations Inc
+		I am not sure I can upload the modified source code or not, statement from Dynastream Innovations Inc
 "Openly available software posted on our downloads page comes with the Apache 2.0 license or the FIT protocol license. We’d like you to use the code, recognizing the value of maintaining interoperability."
 
 
@@ -51,10 +50,8 @@ Compile :
 $touch AUTHORS NEWS README ChangeLog
 $autoreconf -i -m
 </code></pre>
-<pre><code>autoreconf -i -m
-</code></pre>
-<pre>I generate Makefile&Compile source code in <code>Linux 3.0.36+ #1 SMP PREEMPT Mon Oct 7 12:26:12 IST 2013 armv7l armv7l armv7l GNU/Linux
-<code>You should autoreconf in your computer since maybe different CPU&different Linux version</pre>
+		I generate Makefile&Compile source code in <code>Linux 3.0.36+ #1 SMP PREEMPT Mon Oct 7 12:26:12 IST 2013 armv7l armv7l armv7l GNU/Linux
+		You should autoreconf in your computer since maybe different CPU&different Linux version
 
 --------
 - GitHub : https://github.com/corbamico/
