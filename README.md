@@ -23,7 +23,7 @@ Library in Linux is not officially supported by Dynastream Innovations Inc. I tr
 
 Download ANT Library :
 -------
-   + git clone https://github.com/corbamico/
+   + git clone https://github.com/corbamico/ANT-Library
 
 
 COMPILE REQUIREMENTS:
@@ -48,14 +48,24 @@ Compile :
    + Modify according to ChangeLog&Copy this github source code to official source code directory tree
      - configure.ac file should be an same level as "ANT_LIB" "Demo_LIB"
    + Compile:
-<pre><code>
-$touch AUTHORS NEWS README ChangeLog
+<pre>
+<code>
 $autoreconf -i -m
-</code></pre>
-		I generate Makefile&Compile source code in <code>Linux 3.0.36+ #1 SMP PREEMPT Mon Oct 7 12:26:12 IST 2013 armv7l armv7l armv7l GNU/Linux
-		You should autoreconf in your computer since maybe different CPU&different Linux version
+</code>
+or you can make debug version
+<code>
+$autoreconf -i
+$mkdir debug && cd debug && ../configure CPPFLAGS=-DDEBUG_FILE -DSW_VER=\"0.0.1\" && make
+</code>
+</pre>
+I generate Makefile&Compile source code in 
+<code>
+Linux 3.0.36+ armv7l GNU/Linux
+</code>
+  
+You should autoreconf in your computer since maybe different CPU&different Linux version
 
 --------
-- GitHub : https://github.com/corbamico/
+- GitHub : https://github.com/corbamico/ANT-Library
 
 

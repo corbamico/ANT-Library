@@ -60,16 +60,19 @@ class USBDeviceLinux: public USBDevice
    
    BOOL USBReset() const {return TRUE;} //!!Should we change this to USBReEnumerate()?
    USBDeviceLinux(libusb_device_handle* dev_handle)
+   :m_OpenedDevHandle(NULL)
 	{
 		libusb_device_descriptor desc;
-		libusb_device * dev;
 		
-		dev = libusb_get_device (dev_handle	); 
-		libusb_get_device_descriptor (dev, &desc);
+		m_dev = libusb_get_device (dev_handle); 
+		libusb_get_device_descriptor (m_dev, &desc);
 		
 		usVid = desc.idVendor;
 		usPid = desc.idProduct;
 		ulSerialNumber = desc.iSerialNumber;
+		
+		//we already open this dev to handle,so we keep it.
+		m_OpenedDevHandle = dev_handle;
 	}
    
 private:
@@ -81,6 +84,12 @@ private:
 
    UCHAR szProductDescription[USB_MAX_STRLEN];
    UCHAR szSerialString[USB_MAX_STRLEN];
+
+private:
+	friend class USBDeviceHandleLinux;
+	libusb_device			*m_dev;
+	libusb_device_handle 	*m_OpenedDevHandle;
+	
 };
 
 
