@@ -55,7 +55,7 @@ $autoreconf -i -m
 or you can make debug version
 <code>
 $autoreconf -i
-$mkdir debug && cd debug && ../configure CPPFLAGS=-DDEBUG_FILE -DSW_VER=\"0.0.1\" && make
+$mkdir debug && cd debug && ../configure CPPFLAGS='-DDEBUG_FILE -DSW_VER=\"0.0.1\"' && make
 </code>
 </pre>
 I generate Makefile&Compile source code in 
