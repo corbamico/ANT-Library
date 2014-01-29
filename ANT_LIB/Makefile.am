@@ -37,8 +37,13 @@ libant_a_SOURCES= \
 #add new file port to linux 
 #./software/USB/devices/usb_device_linux.cpp  \
 #./software/USB/device_handles/usb_device_handle_linux.cpp  
-	
-AM_CPPFLAGS=$(INCLUDES)
+
+if DEBUG
+AM_CXXFLAGS = -g3 -O0
+AM_CPPFLAGS = $(INCLUDES) -DDEBUG_FILE
+else
+AM_CPPFLAGS = $(INCLUDES)
+endif
 
  
 

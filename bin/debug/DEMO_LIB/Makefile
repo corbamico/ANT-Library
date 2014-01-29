@@ -105,7 +105,7 @@ CPPFLAGS = -DDEBUG_FILE -DSW_VER=\"0.0.1\"
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O0
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps

@@ -138,11 +138,11 @@ CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS = -DDEBUG_FILE -DSW_VER=\"0.0.1\"
+CPPFLAGS = 
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O0
+CXXFLAGS = -g -O2
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -192,10 +192,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.0.1
-abs_builddir = /home/picuntu/github/ANT-Library/bin/debug
-abs_srcdir = /home/picuntu/github/ANT-Library/bin/debug/../..
-abs_top_builddir = /home/picuntu/github/ANT-Library/bin/debug
-abs_top_srcdir = /home/picuntu/github/ANT-Library/bin/debug/../..
+abs_builddir = /home/picuntu/github/ANT-Library/bin/release
+abs_srcdir = /home/picuntu/github/ANT-Library/bin/release/../..
+abs_top_builddir = /home/picuntu/github/ANT-Library/bin/release
+abs_top_srcdir = /home/picuntu/github/ANT-Library/bin/release/../..
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++

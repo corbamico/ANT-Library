@@ -53,7 +53,14 @@ class dummyLibusb
 {
 public:
 	libusb_context *ctx;
-	dummyLibusb(){libusb_init(&ctx);}
+	dummyLibusb(){
+        libusb_init(&ctx);
+    
+#if defined(DEBUG_FILE)
+        libusb_set_debug(ctx,4);
+#endif
+
+    }
 	~dummyLibusb(){libusb_exit(ctx);}
 };
 static dummyLibusb g_libusb;
@@ -65,14 +72,15 @@ class USBDeviceHandleLinux: public USBDeviceHandle
 public:
     USBError::Enum Write(void* pvData_, ULONG ulSize_, ULONG& ulBytesWritten_) 
     {
+        //0xcf0f,0x1008 support LIBUSB_TRANSFER_TYPE_BULK 
 		return get_USBError_by_libusb(
-				libusb_interrupt_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesWritten_,5000)
+				libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesWritten_,15000)
 			);
     }
     USBError::Enum Read(void* pvData_, ULONG ulSize_, ULONG& ulBytesRead_, ULONG ulWaitTime_)
     {
         return get_USBError_by_libusb(
-			libusb_interrupt_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,5000)
+			libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,15000)
         );
     }
     const USBDevice& GetDevice()
@@ -89,14 +97,28 @@ public:
 		clDeviceList.Add(USBDeviceLinux(dev_handle));
 	}
 	
+	  //we should setconfiguration,claiminterferace here
 	  static BOOL Open(const USBDeviceLinux& clDevice_, USBDeviceHandleLinux*& pclDeviceHandle_)
 	  {
+		  int result;
           libusb_device_handle* dev_handle = NULL;
         pclDeviceHandle_ = NULL;
           //we have open it,so use it. Can we do in this way? or Should we re-open it?
 		if(clDevice_.m_OpenedDevHandle)
 		{
 			pclDeviceHandle_ = new USBDeviceHandleLinux(clDevice_.m_OpenedDevHandle);
+			
+			
+			//we should setconfiguration,claiminterferace here
+			
+			result = libusb_set_configuration(pclDeviceHandle_->m_DevHandle,1);
+			if (LIBUSB_SUCCESS!=result)
+				return FALSE;
+			
+			result = libusb_claim_interface(pclDeviceHandle_->m_DevHandle,0);
+			if (LIBUSB_SUCCESS!=result)
+				return FALSE;
+			
 			return TRUE;
 		}
         else
@@ -104,6 +126,13 @@ public:
             if(LIBUSB_SUCCESS==libusb_open(clDevice_.m_dev,&dev_handle))
             {
                 pclDeviceHandle_ = new USBDeviceHandleLinux(dev_handle);
+                result = libusb_set_configuration(pclDeviceHandle_->m_DevHandle,1);
+                if (LIBUSB_SUCCESS==result)
+                    return FALSE;
+                
+                result = libusb_claim_interface(pclDeviceHandle_->m_DevHandle,0);
+                if (LIBUSB_SUCCESS==result)
+                    return FALSE;                
                 return TRUE;
             }
         }
