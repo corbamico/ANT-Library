@@ -68,17 +68,17 @@ You should autoreconf in your computer since maybe different CPU&different Linux
 More words on Garmin/ANT
 ---------
 *
-+https://github.com/mvillalba/python-ant
-+https://github.com/braiden/python-ant-downloader/
-+https://github.com/Tigge/Garmin-Forerunner-610-Extractor
-+http://sourceforge.net/projects/frant/
+ + https://github.com/mvillalba/python-ant
+ + https://github.com/braiden/python-ant-downloader/
+ + https://github.com/Tigge/Garmin-Forerunner-610-Extractor
+ + http://sourceforge.net/projects/frant/
 gant aka garmin-ant-downloader originaly hosted at cgit.open-get.org (now dead) and every bodies clone of it https://github.com/DanAnkers/garmin-ant-downloader
 
 **
-1. USB serial: i.e. Garmin serial/USB protocol (garmin) first documented in gpsbable
-2. USB as a mass storage device Edge 800 -- these are the easiest to work with on linux
-3. ANT - garmin protocal 310XT ect
-4. ANT-FS devices 600 910XT ect
+ 1. USB serial: i.e. Garmin serial/USB protocol (garmin) first documented in gpsbable
+ 2. USB as a mass storage device Edge 800 -- these are the easiest to work with on linux
+ 3. ANT - garmin protocal 310XT ect
+ 4. ANT-FS devices 600 910XT ect
 
 ***
 forerunner 410 (USB-stick(PID=0x1008) USBm-stick(PID=0x1009) can use python-ant-downloader
