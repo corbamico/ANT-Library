@@ -1,24 +1,24 @@
 /*
  * usb_device_linux.cpp
- * 
+ *
  * Copyright 2014 corbamico <corbamico@163.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- * 
- * 
+ *
+ *
  */
 
 #ifndef USB_DEVICE_LINUX_HPP
@@ -57,27 +57,29 @@ class USBDeviceLinux: public USBDevice
    }
 
    DeviceType::Enum GetDeviceType() const {return DeviceType::LIBUSB;} //!!Or we could use a private enum!
-   
+
    BOOL USBReset() const {return TRUE;} //!!Should we change this to USBReEnumerate()?
    USBDeviceLinux(libusb_device_handle* dev_handle)
    :m_OpenedDevHandle(NULL)
 	{
 		libusb_device_descriptor desc;
-		
-		m_dev = libusb_get_device (dev_handle); 
+
+		m_dev = libusb_get_device (dev_handle);
 		libusb_get_device_descriptor (m_dev, &desc);
-		
+
 		usVid = desc.idVendor;
 		usPid = desc.idProduct;
 		ulSerialNumber = desc.iSerialNumber;
-		
+
 		//we already open this dev to handle,so we keep it.
-		m_OpenedDevHandle = dev_handle;
+		//NO,NO,NO we don't do this if this is multi-thread
+		//m_OpenedDevHandle = dev_handle;
+
 	}
-   
+
 private:
 
-   
+
    USHORT usVid;
    USHORT usPid;
    ULONG  ulSerialNumber;
@@ -89,7 +91,7 @@ private:
 	friend class USBDeviceHandleLinux;
 	libusb_device			*m_dev;
 	libusb_device_handle 	*m_OpenedDevHandle;
-	
+
 };
 
 
