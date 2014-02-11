@@ -1,1 +1,36 @@
 # depslib dependency file v1.0
+1392015188 source:/home/picuntu/github/ANT-Library/DEMO_DLL/demo.cpp
+	<stdio.h>
+	<assert.h>
+	"demo.h"
+	"types.h"
+	"antdefines.h"
+	"antmessage.h"
+	"libant.h"
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+
+1392015188 /home/picuntu/github/ANT-Library/DEMO_DLL/demo.h
+	"types.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/types.h
+	<windows.h>
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/antdefines.h
+	"types.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/antmessage.h
+	"types.h"
+	"antdefines.h"
+
+1392015188 /home/picuntu/github/ANT-Library/DEMO_DLL/libant.h
+	"types.h"
+
+1392015188 source:/home/picuntu/github/ANT-Library/DEMO_DLL/libant.cpp
+	"types.h"
+	"libant.h"
+	<stdio.h>
+	<windows.h>
+	<dlfcn.h>
+

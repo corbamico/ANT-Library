@@ -14,7 +14,6 @@
 				<Option parameters="0 0" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-DDEBUG_FILE" />
 					<Add directory="../ANT_LIB/inc" />
 					<Add directory="../ANT_LIB/common" />
 					<Add directory="../ANT_LIB/software/serial" />

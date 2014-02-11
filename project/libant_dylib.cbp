@@ -34,6 +34,10 @@
 			<Add directory="../ANT_LIB/software/serial/device_management" />
 			<Add directory="/usr/include/libusb-1.0" />
 		</Compiler>
+		<Linker>
+			<Add library="usb-1.0" />
+			<Add library="pthread" />
+		</Linker>
 		<Unit filename="../ANT_DLL/ant.cpp" />
 		<Unit filename="../ANT_DLL/ant.h" />
 		<Unit filename="../ANT_LIB/common/checksum.c">

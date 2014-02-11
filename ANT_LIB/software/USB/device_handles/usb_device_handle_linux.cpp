@@ -95,9 +95,20 @@ public:
     {
         clDeviceList.Clear();
 
-        //We only hold ANT device vid=0xfc0f,pid=0x1008
+        //We only hold ANT device vid=0x0fcf,pid=0x1008
+
+#define USB_ANT_STICK2m_PID       ((USHORT)0x1009)
+
+        //try open pid=0x1008,0x1009
         libusb_device_handle* dev_handle = libusb_open_device_with_vid_pid(g_libusb.ctx,USB_ANT_STICK_VID,USB_ANT_STICK2_PID);
-        if(dev_handle!=NULL){
+        if(dev_handle!=NULL)
+        {
+            clDeviceList.Add(USBDeviceLinux(dev_handle));
+            //we should close it before we real need
+            libusb_close(dev_handle);
+        }
+        else if(dev_handle = libusb_open_device_with_vid_pid(g_libusb.ctx,USB_ANT_STICK_VID,USB_ANT_STICK2m_PID))
+        {
             clDeviceList.Add(USBDeviceLinux(dev_handle));
             //we should close it before we real need
             libusb_close(dev_handle);
@@ -111,31 +122,13 @@ public:
         libusb_device_handle* dev_handle = NULL;
 
         pclDeviceHandle_ = NULL;
-        //we have open it,so use it. Can we do in this way? or Should we re-open it?
-        //fix:we will not use opened dev again.
-        if(clDevice_.m_OpenedDevHandle)
-        {
-            pclDeviceHandle_ = new USBDeviceHandleLinux(clDevice_.m_OpenedDevHandle);
 
-
-            //we should setconfiguration,claiminterferace here
-
-            result = libusb_set_configuration(pclDeviceHandle_->m_DevHandle,1);
-            if (LIBUSB_SUCCESS!=result)
-                return FALSE;
-
-            result = libusb_claim_interface(pclDeviceHandle_->m_DevHandle,0);
-            if (LIBUSB_SUCCESS!=result)
-                return FALSE;
-
-            return TRUE;
-        }
-        else
         {
             ///TODO:fixbug Should release/close dev, if call libusb failed,
             if(LIBUSB_SUCCESS==libusb_open(clDevice_.m_dev,&dev_handle))
             {
-                pclDeviceHandle_ = new USBDeviceHandleLinux(dev_handle);
+
+                pclDeviceHandle_ = new USBDeviceHandleLinux(dev_handle,clDevice_);
                 result = libusb_set_configuration(dev_handle,1);
                 if (LIBUSB_SUCCESS!=result)
                     return FALSE;
@@ -161,9 +154,9 @@ public:
 
 protected:
 
-    ///TODO:should fixbug
-    USBDeviceHandleLinux(libusb_device_handle* dev_handle_)
-        :clDevice(dev_handle_)
+
+    USBDeviceHandleLinux(libusb_device_handle* dev_handle_,const USBDeviceLinux& dev)
+        :clDevice(dev)
     {
         m_DevHandle=dev_handle_;
     }

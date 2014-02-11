@@ -21,8 +21,8 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-fexceptions" />
 			<Add option="-g" />
+			<Add option="-fexceptions" />
 			<Add directory="../ANT_LIB/inc" />
 			<Add directory="../ANT_LIB/common" />
 			<Add directory="../ANT_LIB/software/serial" />
@@ -35,106 +35,15 @@
 			<Add directory="../ANT_LIB/software/serial/device_management" />
 			<Add directory="/usr/include/libusb-1.0" />
 		</Compiler>
-		<Unit filename="../ANT_LIB/common/checksum.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/common/checksum.h" />
-		<Unit filename="../ANT_LIB/common/crc.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/common/crc.h" />
-		<Unit filename="../ANT_LIB/inc/antdefines.h" />
-		<Unit filename="../ANT_LIB/inc/antmessage.h" />
-		<Unit filename="../ANT_LIB/inc/defines.h" />
-		<Unit filename="../ANT_LIB/inc/types.h" />
-		<Unit filename="../ANT_LIB/inc/version.h" />
-		<Unit filename="../ANT_LIB/libant_static/main.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_client_channel.cpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_client_channel.hpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_client_interface.hpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_directory.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_directory.h" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_host.cpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_host.hpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_host_channel.cpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_host_channel.hpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_host_interface.hpp" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfs_interface.h" />
-		<Unit filename="../ANT_LIB/software/ANTFS/antfsmessage.h" />
-		<Unit filename="../ANT_LIB/software/ANTFS/config.h" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_iokit.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_iokit.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_linux.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_mac.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_si_iokit.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_si_iokit.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_vcp.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/device_handles/usb_device_handle_vcp.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_iokit.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_iokit.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_linux.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_linux.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_vcp.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/devices/usb_device_vcp.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device_handle.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device_handle.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device_list.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_device_list.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_interface.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_interface.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_transfer.cpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_transfer.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/iokit_driver/iokit_types.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/usb_device_list.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/usb_device_list_template.hpp" />
-		<Unit filename="../ANT_LIB/software/USB/usb_standard_types.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/device_management/dsi_ant_device.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/device_management/dsi_ant_device.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/device_management/dsi_ant_message_processor.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/device_management/dsi_response_queue.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_framer.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_framer.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_framer_ant.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_framer_ant.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_framer_integrated_antfs_client.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial_callback.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial_generic.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial_generic.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial_iokit.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_serial_iokit.hpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_vcp_si.cpp" />
-		<Unit filename="../ANT_LIB/software/serial/dsi_vcp_si.hpp" />
-		<Unit filename="../ANT_LIB/software/system/dsi_convert.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/system/dsi_convert.h" />
-		<Unit filename="../ANT_LIB/software/system/dsi_debug.cpp" />
-		<Unit filename="../ANT_LIB/software/system/dsi_debug.hpp" />
-		<Unit filename="../ANT_LIB/software/system/dsi_thread.h" />
-		<Unit filename="../ANT_LIB/software/system/dsi_thread_posix.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/system/dsi_thread_win32.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/system/dsi_timer.cpp" />
-		<Unit filename="../ANT_LIB/software/system/dsi_timer.hpp" />
-		<Unit filename="../ANT_LIB/software/system/dsi_ts_queue.hpp" />
-		<Unit filename="../ANT_LIB/software/system/macros.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ANT_LIB/software/system/macros.h" />
+		<Linker>
+			<Add library="ant" />
+			<Add library="dl" />
+			<Add directory="bin" />
+		</Linker>
+		<Unit filename="../DEMO_DLL/demo.cpp" />
+		<Unit filename="../DEMO_DLL/demo.h" />
+		<Unit filename="../DEMO_DLL/libant.cpp" />
+		<Unit filename="../DEMO_DLL/libant.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

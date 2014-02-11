@@ -507,7 +507,7 @@
 1392015188 source:/home/picuntu/github/ANT-Library/ANT_LIB/software/USB/devices/usb_device_linux.cpp
 	"usb_device_linux.hpp"
 
-1392022741 /home/picuntu/github/ANT-Library/ANT_LIB/software/USB/devices/usb_device_linux.hpp
+1392087782 /home/picuntu/github/ANT-Library/ANT_LIB/software/USB/devices/usb_device_linux.hpp
 	"types.h"
 	"macros.h"
 	"usb_device.hpp"
@@ -626,4 +626,12 @@
 	<IOKit/IOCFBundle.h>
 	<IOKit/usb/IOUSBLib.h>
 	<IOKit/IOCFPlugIn.h>
+
+1392085935 source:/home/picuntu/github/ANT-Library/ANT_LIB/software/USB/device_handles/usb_device_handle_linux.cpp
+	"types.h"
+	"macros.h"
+	"usb_device_list.hpp"
+	"usb_device_linux.hpp"
+	"usb_device_handle.hpp"
+	<libusb.h>
 
