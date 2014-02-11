@@ -17,11 +17,11 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-DDEBUG_FILE" />
 				</Compiler>
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-DDSI_TYPES_LINUX" />
 			<Add directory="../ANT_LIB/inc" />
 			<Add directory="../ANT_LIB/common" />
 			<Add directory="../ANT_LIB/software/serial" />

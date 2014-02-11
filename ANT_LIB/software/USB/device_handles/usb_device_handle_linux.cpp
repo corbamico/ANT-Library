@@ -58,7 +58,7 @@ public:
         libusb_init(&ctx);
 
 #if defined(DEBUG_FILE)
-        libusb_set_debug(ctx,4);
+        libusb_set_debug(ctx,1);
 #endif
 
     }
@@ -77,15 +77,13 @@ public:
     USBError::Enum Write(void* pvData_, ULONG ulSize_, ULONG& ulBytesWritten_)
     {
         //0xcf0f,0x1008 support LIBUSB_TRANSFER_TYPE_BULK
-        return get_USBError_by_libusb(
-                   libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesWritten_,15000)
-               );
+        int result = libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesWritten_,15000);
+        return get_USBError_by_libusb(result);
     }
     USBError::Enum Read(void* pvData_, ULONG ulSize_, ULONG& ulBytesRead_, ULONG ulWaitTime_)
     {
-        return get_USBError_by_libusb(
-                   libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_OUT,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,15000)
-               );
+        int result = libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_IN,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,15000);
+        return get_USBError_by_libusb(result );
     }
     const USBDevice& GetDevice()
     {
@@ -111,8 +109,10 @@ public:
     {
         int result;
         libusb_device_handle* dev_handle = NULL;
+
         pclDeviceHandle_ = NULL;
         //we have open it,so use it. Can we do in this way? or Should we re-open it?
+        //fix:we will not use opened dev again.
         if(clDevice_.m_OpenedDevHandle)
         {
             pclDeviceHandle_ = new USBDeviceHandleLinux(clDevice_.m_OpenedDevHandle);
@@ -132,6 +132,7 @@ public:
         }
         else
         {
+            ///TODO:fixbug Should release/close dev, if call libusb failed,
             if(LIBUSB_SUCCESS==libusb_open(clDevice_.m_dev,&dev_handle))
             {
                 pclDeviceHandle_ = new USBDeviceHandleLinux(dev_handle);
@@ -142,6 +143,7 @@ public:
                 result = libusb_claim_interface(dev_handle,0);
                 if (LIBUSB_SUCCESS!=result)
                     return FALSE;
+
                 return TRUE;
             }
         }
@@ -159,6 +161,7 @@ public:
 
 protected:
 
+    ///TODO:should fixbug
     USBDeviceHandleLinux(libusb_device_handle* dev_handle_)
         :clDevice(dev_handle_)
     {
@@ -168,12 +171,15 @@ protected:
     virtual ~USBDeviceHandleLinux()
     {
         if(m_DevHandle)
+        {
             libusb_close(m_DevHandle);
+            m_DevHandle=NULL;
+        }
     }
 
 private:
     USBDeviceLinux 			clDevice;
-    libusb_device_handle 	*m_DevHandle;
+    libusb_device_handle 	*m_DevHandle;      ///device_hanlde for write,
 
 public:
     static USBDeviceList<const USBDeviceLinux> clDeviceList;
