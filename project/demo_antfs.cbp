@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="demo_antfs" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/demo_antfs" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="../ANT_LIB/inc" />
+			<Add directory="../ANT_LIB/common" />
+			<Add directory="../ANT_LIB/software/serial" />
+			<Add directory="../ANT_LIB/software/system" />
+			<Add directory="../ANT_LIB/software/USB" />
+			<Add directory="../ANT_LIB/software/ANTFS" />
+			<Add directory="../ANT_LIB/software/USB/device_handles" />
+			<Add directory="../ANT_LIB/software/USB/devices" />
+			<Add directory="../ANT_LIB/software/USB/iokit_driver" />
+			<Add directory="../ANT_LIB/software/serial/device_management" />
+			<Add directory="/usr/include/libusb-1.0" />
+			<Add directory="/usr/include/glib-2.0/" />
+			<Add directory="/usr/lib/arm-linux-gnueabihf/glib-2.0/include/" />
+		</Compiler>
+		<Linker>
+			<Add option="bin/libant.a" />
+			<Add library="glib-2.0" />
+			<Add directory="/usr/lib/arm-linux-gnueabihf/" />
+		</Linker>
+		<Unit filename="../DEMO_ANTFS/demo_antfs.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -58,7 +58,7 @@ public:
         libusb_init(&ctx);
 
 #if defined(DEBUG_FILE)
-        libusb_set_debug(ctx,1);
+        libusb_set_debug(ctx,3);
 #endif
 
     }
@@ -82,7 +82,7 @@ public:
     }
     USBError::Enum Read(void* pvData_, ULONG ulSize_, ULONG& ulBytesRead_, ULONG ulWaitTime_)
     {
-        int result = libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_IN,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,15000);
+        int result = libusb_bulk_transfer(m_DevHandle,0x01|LIBUSB_ENDPOINT_IN,(unsigned char * )pvData_,(int)ulSize_,(int * )&ulBytesRead_,1300);
         return get_USBError_by_libusb(result );
     }
     const USBDevice& GetDevice()
@@ -165,6 +165,10 @@ protected:
     {
         if(m_DevHandle)
         {
+            ///TODO BUG
+            ///libANT.so use anther multi-thread to libusb_xxx_transfer(read) on libuse_open(device)
+            ///the thread will be hangup by mutex_lock, if we call libusb_close.
+            ///how to fix?use async libuse model ?
             libusb_close(m_DevHandle);
             m_DevHandle=NULL;
         }
