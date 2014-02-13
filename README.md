@@ -57,6 +57,19 @@ Compile :
 
 You should autoreconf in your computer since maybe different CPU&different Linux version
 
+DEMO
+---------
+   + DEMO_HRM(console program) act as ANT+ Slave which recieve data from Heart Rate Monitor strap (Garmin Heart Rate Monitor Soft Belt)
+it's working,bpm show in command line:
+<code>
+LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
+</code>
+
+
+Known BUG
+--------
+   + double free occur in ANT_Close, should be fixed furture.
+
 More words on Garmin/ANT
 ---------
 *

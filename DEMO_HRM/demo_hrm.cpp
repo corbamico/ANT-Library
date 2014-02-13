@@ -48,10 +48,12 @@ public:
 
     static void *mainloop_helper(void *context)
     {
-        return ((CANTSlave*)context)->mainloop();
+        pThis = (CANTSlave*)context;
+        return pThis->mainloop();
     }
 public:
-    CANTSlave(){
+    CANTSlave()
+    {
         ANT_Init(0,57600);
     }
     ~CANTSlave()
@@ -66,12 +68,22 @@ private:
     static BOOL channel_callback(UCHAR ucChannel_, UCHAR ucEvent_);
     static BOOL response_callback(UCHAR ucChannel_, UCHAR ucMessageId_);
 
+
+    static BOOL hrm_init(UCHAR ucMessageId_,UCHAR ucResult_);//called by response_callback
+
+    static inline UCHAR decode_hrm_msg(UCHAR data[8]);
+
 private:
     static UCHAR aucChannelBuffer[MAX_CHANNEL_EVENT_SIZE];
     static UCHAR aucResponseBuffer[MAX_RESPONSE_SIZE];
+    static BOOL bExit;
+
+    static CANTSlave* pThis;
 };
-UCHAR CANTSlave::aucChannelBuffer[]={};
-UCHAR CANTSlave::aucResponseBuffer[]={};
+UCHAR CANTSlave::aucChannelBuffer[]= {};
+UCHAR CANTSlave::aucResponseBuffer[]= {};
+BOOL  CANTSlave::bExit=FALSE;
+CANTSlave* CANTSlave::pThis = NULL;
 
 BOOL CANTSlave::init()
 {
@@ -94,24 +106,127 @@ BOOL CANTSlave::run()
 }
 void* CANTSlave::mainloop(void)
 {
-    ///TODO
-    ///ANT_xxxxx
-    ///ANT_xxxxx
     UCHAR aucNetKey[8] = {0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72, 0xC3, 0x45};
+
+    //STEP1 ANT_SetNetworkKey
     ANT_SetNetworkKey(0, aucNetKey);
-    sleep(10);
+    while(!bExit)
+        sleep(5);
+
     return NULL;
 }
 
 BOOL CANTSlave::channel_callback(UCHAR ucChannel_, UCHAR ucEvent_)
 {
-    LOG4CXX_DEBUG(logger,"Rx Channel Event:"<<ucEvent_<<",channel:"<<ucChannel_);
+    UCHAR ucBPM=0;
+    LOG4CXX_DEBUG(logger,"Rx Channel Event:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+
+    switch(ucEvent_)
+    {
+    case EVENT_RX_FLAG_ACKNOWLEDGED:
+    case EVENT_RX_FLAG_BURST_PACKET:
+    case EVENT_RX_FLAG_BROADCAST:
+        LOG4CXX_DEBUG(logger,"Rx Channel [FLAG]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        break;
+
+    case EVENT_RX_ACKNOWLEDGED:
+    case EVENT_RX_BURST_PACKET:
+    case EVENT_RX_BROADCAST:
+        LOG4CXX_DEBUG(logger,"Rx Channel [DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        ucBPM = decode_hrm_msg(aucChannelBuffer+MESSAGE_BUFFER_DATA2_INDEX);
+
+        if(ucBPM)
+        {
+            LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
+        }
+
+        break;
+
+    case EVENT_RX_EXT_ACKNOWLEDGED:
+    case EVENT_RX_EXT_BURST_PACKET:
+    case EVENT_RX_EXT_BROADCAST:
+        LOG4CXX_DEBUG(logger,"Rx Channel [EX DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        break;
+    }
+
     return TRUE;
 }
 BOOL CANTSlave::response_callback(UCHAR ucChannel_, UCHAR ucMessageId_)
 {
     LOG4CXX_DEBUG(logger,"Rx Call Response:"<<(int)ucMessageId_<<",channel:"<<(int)ucChannel_);
+    switch(ucMessageId_)
+    {
+    case MESG_RESPONSE_EVENT_ID:
+    {
+        hrm_init(aucResponseBuffer[MESSAGE_BUFFER_DATA2_INDEX],aucResponseBuffer[MESSAGE_BUFFER_DATA3_INDEX]);
+        break;
+    }
+    default:
+        break;
+    }
     return TRUE;
+}
+
+BOOL CANTSlave::hrm_init(UCHAR ucMessageId_,UCHAR ucResult_)
+{
+    LOG4CXX_DEBUG(logger,"Rx Call Response(MESG_RESPONSE_EVENT_ID):"<<(int)ucMessageId_<<",Result:"<<(int)ucResult_);
+
+    if(RESPONSE_NO_ERROR!=ucResult_)
+    {
+        return FALSE;
+    }
+
+    switch(ucMessageId_)
+    {
+        //step 1 setneworkkey
+    case MESG_NETWORK_KEY_ID:
+        ANT_AssignChannel(0/*channel*/, 0/*slave*/, 0/*network_num*/);
+        break;
+
+        //step2 assignchannelid
+    case MESG_ASSIGN_CHANNEL_ID:
+        ANT_SetChannelId(0, 0, 0x78, 0);
+        break;
+
+        //step3 ANT_SetChannelId
+    case MESG_CHANNEL_ID_ID:
+        ANT_SetChannelRFFreq(0, 0x39/*USER_RADIOFREQ*/);
+        break;
+
+        //step4 ANT_SetChannelRFFreq
+    case MESG_CHANNEL_RADIO_FREQ_ID:
+        ANT_SetChannelPeriod(0,8070);
+        break;
+
+        //step5 ANT_SetChannelPeriod
+    case  MESG_CHANNEL_MESG_PERIOD_ID:
+        ANT_OpenChannel(0);
+        break;
+
+        //step6 ANT_OpenChannel
+    case MESG_OPEN_CHANNEL_ID:
+        //we success do it!
+        break;
+
+    default:
+        break;
+    }
+    return TRUE;
+}
+
+/***
+*BIT 6 Heart Beat Count
+*BIT 7 Computed Heart Rate
+*/
+UCHAR CANTSlave::decode_hrm_msg(UCHAR data[8])
+{
+    static UCHAR ucHeartBeatCount = 0;
+    if(ucHeartBeatCount!= data[6])
+    {
+        ucHeartBeatCount = data[6];
+        return data[7];
+    }
+    return 0;
 }
 
 int main(void)
