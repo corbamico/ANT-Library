@@ -26,6 +26,7 @@
 			<Add library="ant" />
 			<Add library="usb-1.0" />
 			<Add library="pthread" />
+			<Add library="log4cxx" />
 			<Add directory="bin" />
 		</Linker>
 		<Unit filename="../DEMO_HRM/demo_hrm.cpp" />

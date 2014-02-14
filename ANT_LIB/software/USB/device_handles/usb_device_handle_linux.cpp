@@ -130,13 +130,26 @@ public:
 
                 pclDeviceHandle_ = new USBDeviceHandleLinux(dev_handle,clDevice_);
                 result = libusb_set_configuration(dev_handle,1);
+
                 if (LIBUSB_SUCCESS!=result)
+                {
+                    libusb_close(dev_handle);
+                    pclDeviceHandle_ = NULL;
                     return FALSE;
+                }
 
                 result = libusb_claim_interface(dev_handle,0);
                 if (LIBUSB_SUCCESS!=result)
+                {
+                    libusb_close(dev_handle);
+                    pclDeviceHandle_ = NULL;
                     return FALSE;
+                }
 
+                ///TODO bug
+                ///I don't known why libusb_close()->unref->free(dev) always call double free error
+                ///so just keep ref++ avoid free(dev), maybe bug/leak here.
+                libusb_ref_device(clDevice_.m_dev);
                 return TRUE;
             }
         }
@@ -147,6 +160,17 @@ public:
     {
         if(pclDeviceHandle_ == NULL)
             return FALSE;
+
+        if(pclDeviceHandle_->m_DevHandle)
+        {
+
+            libusb_release_interface(pclDeviceHandle_->m_DevHandle,0);
+            libusb_close(pclDeviceHandle_->m_DevHandle);
+            pclDeviceHandle_->m_DevHandle=NULL;
+        }
+
+        ///TODO BUG
+        ///*** Error in `./demo_dylib': double free or corruption (!prev): 0x0001e220 ***
         delete pclDeviceHandle_;
         pclDeviceHandle_ = NULL;
         return TRUE;
@@ -163,15 +187,7 @@ protected:
 
     virtual ~USBDeviceHandleLinux()
     {
-        if(m_DevHandle)
-        {
-            ///TODO BUG
-            ///libANT.so use anther multi-thread to libusb_xxx_transfer(read) on libuse_open(device)
-            ///the thread will be hangup by mutex_lock, if we call libusb_close.
-            ///how to fix?use async libuse model ?
-            libusb_close(m_DevHandle);
-            m_DevHandle=NULL;
-        }
+
     }
 
 private:

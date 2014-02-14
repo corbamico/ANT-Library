@@ -32,6 +32,10 @@
 #define MESSAGE_BUFFER_DATA13_INDEX ((UCHAR) 12)
 #define MESSAGE_BUFFER_DATA14_INDEX ((UCHAR) 13)
 
+#define ANTPLUS_NETWORK_KEY  {0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72, 0xC3, 0x45}
+#define HRM_DEVICETYPE   0x78
+#define HRM_RFFREQUENCY  0x39   //Set the RF frequency to channel 57 - 2.457GHz
+#define HRM_MESSAGEPERIOD  8070    //Set the message period to 8070 counts specific for the HRM
 using namespace log4cxx;
 using namespace log4cxx::helpers;
 
@@ -52,10 +56,6 @@ public:
         return pThis->mainloop();
     }
 public:
-    CANTSlave()
-    {
-        ANT_Init(0,57600);
-    }
     ~CANTSlave()
     {
         ANT_UnassignAllResponseFunctions();
@@ -87,7 +87,10 @@ CANTSlave* CANTSlave::pThis = NULL;
 
 BOOL CANTSlave::init()
 {
+    log4cxx::PropertyConfigurator::configure("log4cxx.properties");
+    //BasicConfigurator::configure();
 
+    ANT_Init(0,57600);
     ANT_AssignResponseFunction(CANTSlave::response_callback, CANTSlave::aucResponseBuffer);
     ANT_AssignChannelEventFunction(USER_ANTCHANNEL,CANTSlave::channel_callback, CANTSlave::aucChannelBuffer);
     ANT_ResetSystem();
@@ -106,7 +109,7 @@ BOOL CANTSlave::run()
 }
 void* CANTSlave::mainloop(void)
 {
-    UCHAR aucNetKey[8] = {0xB9, 0xA5, 0x21, 0xFB, 0xBD, 0x72, 0xC3, 0x45};
+    UCHAR aucNetKey[8] = ANTPLUS_NETWORK_KEY;
 
     //STEP1 ANT_SetNetworkKey
     ANT_SetNetworkKey(0, aucNetKey);
@@ -185,17 +188,17 @@ BOOL CANTSlave::hrm_init(UCHAR ucMessageId_,UCHAR ucResult_)
 
         //step2 assignchannelid
     case MESG_ASSIGN_CHANNEL_ID:
-        ANT_SetChannelId(0, 0, 0x78, 0);
+        ANT_SetChannelId(0, 0, HRM_DEVICETYPE, 0);
         break;
 
         //step3 ANT_SetChannelId
     case MESG_CHANNEL_ID_ID:
-        ANT_SetChannelRFFreq(0, 0x39/*USER_RADIOFREQ*/);
+        ANT_SetChannelRFFreq(0, HRM_RFFREQUENCY/*USER_RADIOFREQ*/);
         break;
 
         //step4 ANT_SetChannelRFFreq
     case MESG_CHANNEL_RADIO_FREQ_ID:
-        ANT_SetChannelPeriod(0,8070);
+        ANT_SetChannelPeriod(0,HRM_MESSAGEPERIOD);
         break;
 
         //step5 ANT_SetChannelPeriod
@@ -231,7 +234,7 @@ UCHAR CANTSlave::decode_hrm_msg(UCHAR data[8])
 
 int main(void)
 {
-    log4cxx::PropertyConfigurator::configure("./log4cxx.properties");
+
     {
         CANTSlave slave;
         slave.init();

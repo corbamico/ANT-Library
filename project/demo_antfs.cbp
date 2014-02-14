@@ -34,8 +34,9 @@
 			<Add directory="/usr/lib/arm-linux-gnueabihf/glib-2.0/include/" />
 		</Compiler>
 		<Linker>
-			<Add option="bin/libant.a" />
 			<Add library="glib-2.0" />
+			<Add library="log4cxx" />
+			<Add library="ant" />
 			<Add directory="/usr/lib/arm-linux-gnueabihf/" />
 		</Linker>
 		<Unit filename="../DEMO_ANTFS/demo_antfs.cpp" />

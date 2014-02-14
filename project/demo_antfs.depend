@@ -1,6 +1,14 @@
 # depslib dependency file v1.0
-1392116237 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
-	<glib.h>
+1392370639 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
+	"antfs_host.hpp"
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<pthread.h>
+	<log4cxx/logger.h>
+	<log4cxx/basicconfigurator.h>
+	<log4cxx/propertyconfigurator.h>
+	<log4cxx/helpers/exception.h>
 
 1365622343 /usr/include/glib-2.0//glib.h
 	<glib/galloca.h>
@@ -346,4 +354,86 @@
 1365622343 /usr/include/glib-2.0//glib/deprecated/gthread.h
 	<glib/gthread.h>
 	<pthread.h>
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfs_host.hpp
+	"types.h"
+	"dsi_debug.hpp"
+	"antfs_host_channel.hpp"
+	"dsi_ant_device.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/types.h
+	<windows.h>
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/system/dsi_debug.hpp
+	"types.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfs_host_channel.hpp
+	"types.h"
+	"dsi_thread.h"
+	"dsi_timer.hpp"
+	"dsi_framer_ant.hpp"
+	"dsi_debug.hpp"
+	"dsi_response_queue.hpp"
+	"dsi_ant_message_processor.hpp"
+	"antfsmessage.h"
+	"antfs_host_interface.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/system/dsi_thread.h
+	"types.h"
+	<windows.h>
+	<pthread.h>
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/system/dsi_timer.hpp
+	"types.h"
+	"dsi_thread.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/dsi_framer_ant.hpp
+	"types.h"
+	"antmessage.h"
+	"antdefines.h"
+	"dsi_framer.hpp"
+	"dsi_thread.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/antmessage.h
+	"types.h"
+	"antdefines.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/inc/antdefines.h
+	"types.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/dsi_framer.hpp
+	"types.h"
+	"dsi_serial.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/dsi_serial.hpp
+	"types.h"
+	"dsi_serial_callback.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/dsi_serial_callback.hpp
+	"types.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/device_management/dsi_response_queue.hpp
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/device_management/dsi_ant_message_processor.hpp
+	"types.h"
+	"dsi_framer_ant.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfsmessage.h
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfs_host_interface.hpp
+	"types.h"
+	"dsi_thread.h"
+	"antfs_interface.h"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfs_interface.h
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/serial/device_management/dsi_ant_device.hpp
+	"types.h"
+	"dsi_thread.h"
+	"dsi_framer_ant.hpp"
+	"dsi_serial.hpp"
+	"dsi_debug.hpp"
+	"antmessage.h"
+	"dsi_ant_message_processor.hpp"
+	"dsi_response_queue.hpp"
 
