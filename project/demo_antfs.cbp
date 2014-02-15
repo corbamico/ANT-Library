@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DDEBUG_FILE" />
 				</Compiler>
 			</Target>
 		</Build>
@@ -34,12 +35,13 @@
 			<Add directory="/usr/lib/arm-linux-gnueabihf/glib-2.0/include/" />
 		</Compiler>
 		<Linker>
-			<Add library="glib-2.0" />
 			<Add library="log4cxx" />
 			<Add library="ant" />
+			<Add library="pthread" />
 			<Add directory="/usr/lib/arm-linux-gnueabihf/" />
 		</Linker>
 		<Unit filename="../DEMO_ANTFS/demo_antfs.cpp" />
+		<Unit filename="../DEMO_ANTFS/demo_antfs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

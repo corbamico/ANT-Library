@@ -61,14 +61,32 @@ DEMO
 ---------
    + DEMO_HRM(console program) act as ANT+ Slave which recieve data from Heart Rate Monitor strap (Garmin Heart Rate Monitor Soft Belt)
 it's working,bpm show in command line:
+<pre>
 <code>
 LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
 </code>
+</pre>
+   + DEMO_ANTFS(console program) act as ANT+ Slave which recieve data from Garmin Forerunner 410 as showing information as following:
+<pre>
+<code>
+[ 12:03:31] [0x465ff420] INFO  demo antfs - Found Device: Forerunner 410 China
+[ 12:03:31] [0x465ff420] INFO  demo antfs -    ANT Device Number: 
+[ 12:03:31] [0x465ff420] INFO  demo antfs -    Device ID:  
+[ 12:03:31] [0x465ff420] INFO  demo antfs -    Manufacturer ID:  2
+[ 12:03:31] [0x465ff420] INFO  demo antfs -    Device Type: 1
+[ 12:03:31] [0x465ff420] INFO  demo antfs -    Authentication Type: 3
+[ 12:03:31] [0x465ff420] INFO  demo antfs -      Has New Data: 0
+[ 12:03:31] [0x465ff420] INFO  demo antfs -      Has Paring: 0
+[ 12:03:31] [0x465ff420] INFO  demo antfs -      Has Upload Enable: 0
+[ 12:03:31] [0x465ff420] INFO  demo antfs -      Beacon Channel Period: 1Hz
+[ 12:03:31] [0x465ff420] INFO  demo antfs -      Client status: (0)Link State
 
+</code>
+<pre>
 
 Known BUG
 --------
-   + double free occur in ANT_Close, should be fixed furture.
+   + libusb_ref after libusb_open antfs device avoid double free occur in ANT_Close.
 
 More words on Garmin/ANT
 ---------
