@@ -1,6 +1,8 @@
 # depslib dependency file v1.0
-1392370639 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
+1392624790 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
 	"antfs_host.hpp"
+	"antfs_directory.h"
+	"demo_antfs.h"
 	<stdio.h>
 	<stdlib.h>
 	<unistd.h>
@@ -436,4 +438,9 @@
 	"antmessage.h"
 	"dsi_ant_message_processor.hpp"
 	"dsi_response_queue.hpp"
+
+1392015188 /home/picuntu/github/ANT-Library/ANT_LIB/software/ANTFS/antfs_directory.h
+	"types.h"
+
+1392428900 /home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.h
 

@@ -39,8 +39,7 @@ Dependances :
      - get "ANT MacOSX library Package with source code" from http://www.thisisant.com/developer/resources/downloads
 
    + libusb1.0
-<pre><code>sudo apt-get install libusb1.0-dev
-</code></pre>
+<pre><code>sudo apt-get install libusb1.0-dev</code></pre>
 
 
 Compile :
@@ -66,9 +65,9 @@ it's working,bpm show in command line:
 LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
 </code>
 </pre>
+
    + DEMO_ANTFS(console program) act as ANT+ Slave which recieve data from Garmin Forerunner 410 as showing information as following:
-<pre>
-<code>
+<pre><code>
 [ 12:03:31] [0x465ff420] INFO  demo antfs - Found Device: Forerunner 410 China
 [ 12:03:31] [0x465ff420] INFO  demo antfs -    ANT Device Number: 
 [ 12:03:31] [0x465ff420] INFO  demo antfs -    Device ID:  
@@ -80,31 +79,44 @@ LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
 [ 12:03:31] [0x465ff420] INFO  demo antfs -      Has Upload Enable: 0
 [ 12:03:31] [0x465ff420] INFO  demo antfs -      Beacon Channel Period: 1Hz
 [ 12:03:31] [0x465ff420] INFO  demo antfs -      Client status: (0)Link State
+</code></pre>
 
-</code>
-<pre>
 
 Known BUG
 --------
    + libusb_ref after libusb_open antfs device avoid double free occur in ANT_Close.
 
+
 More words on Garmin/ANT
 ---------
 *
  + https://github.com/mvillalba/python-ant
- + https://github.com/braiden/python-ant-downloader/
- + https://github.com/Tigge/Garmin-Forerunner-610-Extractor
+ 
+ + https://github.com/braiden/python-ant-downloader/        
+   (ANTFS + Garmin Protocal: works for my fr410)
+ 
+ + https://github.com/Tigge/Garmin-Forerunner-610-Extractor 
+   (extract fit file via ANTFS,works for fr60/fr70/405cx/310xt/610/910xt/Swim)
+ 
  + http://sourceforge.net/projects/frant/
 gant aka garmin-ant-downloader originaly hosted at cgit.open-get.org (now dead) and every bodies clone of it https://github.com/DanAnkers/garmin-ant-downloader
+
+
 
 **
  1. USB serial: i.e. Garmin serial/USB protocol (garmin) first documented in gpsbable
  2. USB as a mass storage device Edge 800 -- these are the easiest to work with on linux
  3. ANT - garmin protocal 310XT ect
  4. ANT-FS devices 600 910XT ect
+ 5. ANTFS + Garmin Protocal: Forerunner 410 use ANTFS for link/auth, use Garmin Protocal for application via ANTFS extention(CommandID=0x0D which is not described in <ANT File Share Technology.pdf>)
+ 
 
 ***
 forerunner 410 (USB-stick(PID=0x1008) USBm-stick(PID=0x1009) can use python-ant-downloader
+
+****
+	1. Garmin Protocol  http://www8.garmin.com/support/commProtocol.html
+    2. ANT/ANTFS Document  http://www.thisisant.com/developer/resources/downloads#documents_tab
 
 
 --------

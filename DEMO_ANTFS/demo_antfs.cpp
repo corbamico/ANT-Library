@@ -20,7 +20,9 @@
  *
  *
  */
+
 #include "antfs_host.hpp"
+#include "antfs_directory.h"
 #include "demo_antfs.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,10 +147,30 @@ void CANTFSHost::display_watch_info()
     LOG4CXX_INFO(logger,"     Client status: (" << int(stDeviceParameters_.ucStatusByte2 & 0x03 ) << ")" << szANTFS_CLIENT_DEVICE_STATUS[(stDeviceParameters_.ucStatusByte2 & 0x03 )]);
 }
 
+static const char* const szANTFS_RETURN[] =
+{
+    "ANTFS_RETURN_FAIL",
+    "ANTFS_RETURN_PASS",
+    "ANTFS_RETURN_BUSY"
+};
 void* CANTFSHost::ReceiveThread()
 {
     BOOL bExit=FALSE;
     ANTFS_RESPONSE response;
+    ULONG ulLength,ulNumberOfEntries;
+    UCHAR ucBuffer[1024*100];
+    ANTFS_DIRECTORY_HEADER* stHeader;
+
+    UCHAR szFriendHostName[]="g8picuntu";
+    UCHAR szResponseKey[255];
+    UCHAR ucResponseKeySize = 254;
+
+    static UCHAR szPassKey[] = {0x20,0x4f,0x61,0xa4,0x9d,0x2a,0xf9,0x9b};
+
+    ULONG ulSpace;
+
+    ANTFS_RETURN eReturn;
+
     while(!bExit)
     {
         response = hostImp_.WaitForResponse(997);
@@ -160,11 +182,56 @@ void* CANTFSHost::ReceiveThread()
         case ANTFS_RESPONSE_CONNECT_PASS:
             getFoundDeviceInfo();
             display_watch_info();
+
+            //go to auth AUTH_COMMAND_PAIR
+            //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
+            //LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
+
+
+            if (eReturn==ANTFS_RETURN_FAIL)
+            {
+                //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
+
+                eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
+                LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn]);
+            }
+            break;
+
+        case ANTFS_RESPONSE_AUTHENTICATE_NA:
+        case ANTFS_RESPONSE_AUTHENTICATE_REJECT:
+        case ANTFS_RESPONSE_AUTHENTICATE_FAIL:
+
+            LOG4CXX_DEBUG(logger,"ANTFS Response Authenticate:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            break;
+
+            //go to download, auth pass
+        case ANTFS_RESPONSE_AUTHENTICATE_PASS:
+            eReturn = hostImp_.Download(0,0,MAX_DATA_SIZE);
+            LOG4CXX_DEBUG(logger,"ANTFS Function Download Return:" << szANTFS_RETURN[eReturn]);
+
+//            ulSpace = ANTFS_GetUsedSpace();
+//            if(ulSpace != 0xFFFFFFFF)
+//                printf("Used space is %d bytes\n", ulSpace);
+//            else
+//                printf("Error %d\n", ANTFS_GetLastError());
+
+            break;
+
+        case ANTFS_RESPONSE_DOWNLOAD_PASS:
+            hostImp_.GetTransferData(&ulLength);
+            hostImp_.GetTransferData(&ulLength,ucBuffer);
+            stHeader = (ANTFS_DIRECTORY_HEADER*)ucBuffer;
+            ulNumberOfEntries = (ulLength - sizeof(ANTFS_DIRECTORY_HEADER))/sizeof(ANTFSP_DIRECTORY);
+
+
+            LOG4CXX_DEBUG(logger,"ANTFS Directory Version: " << (int)(stHeader->ucVersion) );
+            LOG4CXX_DEBUG(logger,"ANTFS Directory Number Entry: " << (int)(ulNumberOfEntries) );
+
             break;
 
         case ANTFS_RESPONSE_OPEN_PASS:
         case ANTFS_RESPONSE_CONNECTION_LOST:
-            break;
+
         default:
             LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
         }
@@ -229,7 +296,10 @@ BOOL CANTFSHost::init()
     hostImp_.AddSearchDevice(&stSearchMask,&stSearchParameters);
 
     eReturn = hostImp_.SearchForDevice(FR_410_SEARCH_FREQ,FR_410_LINK_FREQ,0,TRUE);
-    LOG4CXX_DEBUG(logger,"Search for device, Return:" << (int)eReturn);
+    LOG4CXX_DEBUG(logger,"Search for device, Return:" << szANTFS_RETURN[eReturn]);
+
+    //eReturn = hostImp_.Authenticate(AUTH_COMMAND_GOTO_TRANSPORT,NULL, 0, NULL, NULL, 9999);
+    //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR);
 
 //    eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR);
 //    eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY);
@@ -242,6 +312,7 @@ BOOL CANTFSHost::run()
     while((ch!='q')&&(ch!='Q'))
         ch = getchar();
 
+    hostImp_.Close();
     DSIThread_DestroyThread(dsiThreadID_);
     return TRUE;
 }
