@@ -35,6 +35,11 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/helpers/exception.h>
 
+#include <string>
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
 using namespace log4cxx;
 using namespace log4cxx::helpers;
 
@@ -49,6 +54,7 @@ public:
 
 
     void display_watch_info();
+    void display_product_info(ULONG ulLength,UCHAR *pData);
 
 private:
 
@@ -147,6 +153,25 @@ void CANTFSHost::display_watch_info()
     LOG4CXX_INFO(logger,"     Client status: (" << int(stDeviceParameters_.ucStatusByte2 & 0x03 ) << ")" << szANTFS_CLIENT_DEVICE_STATUS[(stDeviceParameters_.ucStatusByte2 & 0x03 )]);
 }
 
+typedef struct
+{
+    unsigned  product_id;
+    unsigned  software_version;
+    char      product_description[];
+}Product_Data_Type;
+
+void CANTFSHost::display_product_info(ULONG ulLength,UCHAR *pData)
+{
+    Product_Data_Type* pProduct = (Product_Data_Type*)pData;
+    LOG4CXX_INFO(logger,"Garmin Product Device: " << aucFriendlyName_);
+    LOG4CXX_INFO(logger,"   ID: " << (int)pProduct->product_id);
+    LOG4CXX_INFO(logger,"   software_version:  "        << (unsigned int)(pProduct->software_version));
+    LOG4CXX_INFO(logger,"   product_description:  "     << (pProduct->product_description));
+
+
+}
+
+
 static const char* const szANTFS_RETURN[] =
 {
     "ANTFS_RETURN_FAIL",
@@ -167,86 +192,11 @@ void* CANTFSHost::ReceiveThread()
 
     static UCHAR szPassKey[] = {0x20,0x4f,0x61,0xa4,0x9d,0x2a,0xf9,0x9b};
 
-    ULONG ulSpace;
-
-    ANTFS_RETURN eReturn;
-
-    while(!bExit)
-    {
-        response = hostImp_.WaitForResponse(997);
-        switch(response)
-        {
-        case ANTFS_RESPONSE_NONE:
-            break;
-
-        case ANTFS_RESPONSE_CONNECT_PASS:
-            getFoundDeviceInfo();
-            display_watch_info();
-
-            //go to auth AUTH_COMMAND_PAIR
-            //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
-            //LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
+    static UCHAR szPid_Product_Rqst[]={254};
 
 
-            if (eReturn==ANTFS_RETURN_FAIL)
-            {
-                //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
-
-                eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
-                LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn]);
-            }
-            break;
-
-        case ANTFS_RESPONSE_AUTHENTICATE_NA:
-        case ANTFS_RESPONSE_AUTHENTICATE_REJECT:
-        case ANTFS_RESPONSE_AUTHENTICATE_FAIL:
-
-            LOG4CXX_DEBUG(logger,"ANTFS Response Authenticate:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
-            break;
-
-            //go to download, auth pass
-        case ANTFS_RESPONSE_AUTHENTICATE_PASS:
-            eReturn = hostImp_.Download(0,0,MAX_DATA_SIZE);
-            LOG4CXX_DEBUG(logger,"ANTFS Function Download Return:" << szANTFS_RETURN[eReturn]);
-
-//            ulSpace = ANTFS_GetUsedSpace();
-//            if(ulSpace != 0xFFFFFFFF)
-//                printf("Used space is %d bytes\n", ulSpace);
-//            else
-//                printf("Error %d\n", ANTFS_GetLastError());
-
-            break;
-
-        case ANTFS_RESPONSE_DOWNLOAD_PASS:
-            hostImp_.GetTransferData(&ulLength);
-            hostImp_.GetTransferData(&ulLength,ucBuffer);
-            stHeader = (ANTFS_DIRECTORY_HEADER*)ucBuffer;
-            ulNumberOfEntries = (ulLength - sizeof(ANTFS_DIRECTORY_HEADER))/sizeof(ANTFSP_DIRECTORY);
 
 
-            LOG4CXX_DEBUG(logger,"ANTFS Directory Version: " << (int)(stHeader->ucVersion) );
-            LOG4CXX_DEBUG(logger,"ANTFS Directory Number Entry: " << (int)(ulNumberOfEntries) );
-
-            break;
-
-        case ANTFS_RESPONSE_OPEN_PASS:
-        case ANTFS_RESPONSE_CONNECTION_LOST:
-
-        default:
-            LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
-        }
-    }
-    return NULL;
-}
-
-//ANTFS Network Key
-UCHAR CANTFSHost::aucNetworkkey[]= {0xA8, 0xA4, 0x23, 0xB9, 0xF5, 0x5E, 0x63, 0xC1};
-
-BOOL CANTFSHost::init()
-{
-
-    BOOL bReturn;
-    ANTFS_RETURN eReturn;
     ANTFS_DEVICE_PARAMETERS stSearchMask;
     ANTFS_DEVICE_PARAMETERS stSearchParameters;
 
@@ -271,38 +221,113 @@ BOOL CANTFSHost::init()
     stSearchParameters.ucStatusByte1 = 0;
     stSearchParameters.ucStatusByte2 = 0;
 
+    ULONG ulSpace;
+
+    ANTFS_RETURN eReturn;
+
+    while(!bExit)
+    {
+        response = hostImp_.WaitForResponse(997);
+        switch(response)
+        {
+        case ANTFS_RESPONSE_NONE:
+            break;
+
+            //open success,then go to SearchForDevice
+        case ANTFS_RESPONSE_OPEN_PASS:
+            //hostImp_.EnablePing(TRUE);
+            hostImp_.SetChannelID(FR_410_CHANNEL_DEVICE_TYPE,FR_410_CHANNEL_TRANS_TYPE);
+            hostImp_.SetMessagePeriod(FR_410_MESG_PERIOD);
+            hostImp_.SetProximitySearch(5);
+            hostImp_.SetNetworkkey(aucNetworkkey);
+
+            hostImp_.ClearSearchDeviceList();
+            hostImp_.AddSearchDevice(&stSearchMask,&stSearchParameters);
+
+            eReturn = hostImp_.SearchForDevice(FR_410_SEARCH_FREQ,FR_410_LINK_FREQ,0,TRUE);
+            LOG4CXX_DEBUG(logger,"Search for device, Return:" << szANTFS_RETURN[eReturn]);
+            break;
+
+            //connected,then get info,and authenticate
+        case ANTFS_RESPONSE_CONNECT_PASS:
+            getFoundDeviceInfo();
+            display_watch_info();
+
+            //go to auth AUTH_COMMAND_PAIR
+            //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
+            //LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
+
+
+//            if (eReturn==ANTFS_RETURN_FAIL)
+            {
+                //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
+                eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
+                LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn]);
+            }
+            break;
+
+        case ANTFS_RESPONSE_AUTHENTICATE_NA:
+        case ANTFS_RESPONSE_AUTHENTICATE_REJECT:
+        case ANTFS_RESPONSE_AUTHENTICATE_FAIL:
+
+            LOG4CXX_DEBUG(logger,"ANTFS Response Authenticate:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            break;
+
+            //Authenticate success,then go to download
+        case ANTFS_RESPONSE_AUTHENTICATE_PASS:
+//            eReturn = hostImp_.Download(0,0,MAX_DATA_SIZE);
+//            LOG4CXX_DEBUG(logger,"ANTFS Function Download Return:" << szANTFS_RETURN[eReturn]);
+            eReturn = hostImp_.ManualTransfer(0xffff,0,1,szPid_Product_Rqst);
+            LOG4CXX_DEBUG(logger,"ANTFS Function ManualTransfer Return:" << szANTFS_RETURN[eReturn]);
+
+            break;
+        case ANTFS_RESPONSE_MANUAL_TRANSFER_PASS:
+            LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            hostImp_.GetTransferData(&ulLength,ucBuffer);
+            display_product_info(ulLength,ucBuffer);
+
+            break;
+        case ANTFS_RESPONSE_DOWNLOAD_PASS:
+            hostImp_.GetTransferData(&ulLength);
+            hostImp_.GetTransferData(&ulLength,ucBuffer);
+            stHeader = (ANTFS_DIRECTORY_HEADER*)ucBuffer;
+            ulNumberOfEntries = (ulLength - sizeof(ANTFS_DIRECTORY_HEADER))/sizeof(ANTFSP_DIRECTORY);
+
+
+            LOG4CXX_DEBUG(logger,"ANTFS Directory Version: " << (int)(stHeader->ucVersion) );
+            LOG4CXX_DEBUG(logger,"ANTFS Directory Number Entry: " << (int)(ulNumberOfEntries) );
+
+            break;
+
+        case ANTFS_RESPONSE_SERIAL_FAIL:
+        case ANTFS_RESPONSE_CONNECTION_LOST:
+            hostImp_.Disconnect(5);
+            bExit = TRUE;
+
+        default:
+            LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+        }
+    }
+    return NULL;
+}
+
+//ANTFS Network Key
+UCHAR CANTFSHost::aucNetworkkey[]= {0xA8, 0xA4, 0x23, 0xB9, 0xF5, 0x5E, 0x63, 0xC1};
+
+BOOL CANTFSHost::init()
+{
+
+    BOOL bReturn;
+    ANTFS_RETURN eReturn;
 
     log4cxx::PropertyConfigurator::configure("log4cxx.properties");
-
 
     hostImp_.SetDebug(TRUE);
 
     bReturn = hostImp_.Init(0,57600);
     LOG4CXX_DEBUG(logger,"ANTFS Init Return:" << (int)bReturn);
 
-    //pthread_create(&t,NULL,ReceiveThread_helper,this);
-
     dsiThreadID_ = DSIThread_CreateThread(ReceiveThread_helper,this);
-
-    sleep(10);
-
-    hostImp_.EnablePing(TRUE);
-    hostImp_.SetChannelID(FR_410_CHANNEL_DEVICE_TYPE,FR_410_CHANNEL_TRANS_TYPE);
-    hostImp_.SetMessagePeriod(FR_410_MESG_PERIOD);
-    hostImp_.SetProximitySearch(5);
-    hostImp_.SetNetworkkey(aucNetworkkey);
-
-    hostImp_.ClearSearchDeviceList();
-    hostImp_.AddSearchDevice(&stSearchMask,&stSearchParameters);
-
-    eReturn = hostImp_.SearchForDevice(FR_410_SEARCH_FREQ,FR_410_LINK_FREQ,0,TRUE);
-    LOG4CXX_DEBUG(logger,"Search for device, Return:" << szANTFS_RETURN[eReturn]);
-
-    //eReturn = hostImp_.Authenticate(AUTH_COMMAND_GOTO_TRANSPORT,NULL, 0, NULL, NULL, 9999);
-    //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR);
-
-//    eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR);
-//    eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY);
 
     return TRUE;
 }

@@ -22,6 +22,7 @@
 !usb_device_handle_linux.cpp
 !usb_device_handle_linux.hpp
 !demo_hrm.cpp
-!demo_antfs.*
+!demo_antfs.cpp
+!demo_antfs.h
 !project/*.cbp
 !project/*.depend

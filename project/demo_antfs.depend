@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1392624790 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
+1392803871 source:/home/picuntu/github/ANT-Library/DEMO_ANTFS/demo_antfs.cpp
 	"antfs_host.hpp"
 	"antfs_directory.h"
 	"demo_antfs.h"
@@ -11,6 +11,9 @@
 	<log4cxx/basicconfigurator.h>
 	<log4cxx/propertyconfigurator.h>
 	<log4cxx/helpers/exception.h>
+	<string>
+	<sstream>
+	<iomanip>
 
 1365622343 /usr/include/glib-2.0//glib.h
 	<glib/galloca.h>

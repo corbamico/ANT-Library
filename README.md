@@ -89,7 +89,7 @@ Known BUG
 
 More words on Garmin/ANT
 ---------
-*
+**
  + https://github.com/mvillalba/python-ant
  
  + https://github.com/braiden/python-ant-downloader/        
@@ -111,12 +111,19 @@ gant aka garmin-ant-downloader originaly hosted at cgit.open-get.org (now dead) 
  5. ANTFS + Garmin Protocal: Forerunner 410 use ANTFS for link/auth, use Garmin Protocal for application via ANTFS extention(CommandID=0x0D which is not described in <ANT File Share Technology.pdf>)
  
 
-***
+**
 forerunner 410 (USB-stick(PID=0x1008) USBm-stick(PID=0x1009) can use python-ant-downloader
 
-****
-	1. Garmin Protocol  http://www8.garmin.com/support/commProtocol.html
-    2. ANT/ANTFS Document  http://www.thisisant.com/developer/resources/downloads#documents_tab
+**
+ 1. Garmin Protocol  http://www8.garmin.com/support/commProtocol.html
+ 2. ANT/ANTFS Document  http://www.thisisant.com/developer/resources/downloads#documents_tab
+
+
+
+More Words about ANTFS/Garmin Protocol for Dev
+--------
+ + Garmin Protocal use ManualTransfer via ANTFS by ManualTransfer(USHORT usFileIndex_=0xFFFF, ULONG ulDataOffset_, ULONG ulDataLength_, void *pvData_);
+which sent (0x44,0x0D,0xFF....) to watch. ANTFS_SEND_DIRECT_ID=0x0D is undocument, but in libant src.
 
 
 --------
