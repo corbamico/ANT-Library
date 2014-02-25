@@ -254,14 +254,14 @@ void* CANTFSHost::ReceiveThread()
             display_watch_info();
 
             //go to auth AUTH_COMMAND_PAIR
-            //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
-            //LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
+            eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
+            LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
 
 
-//            if (eReturn==ANTFS_RETURN_FAIL)
+//          if (eReturn==ANTFS_RETURN_FAIL)
             {
-                //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
-                eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
+                eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
+                //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
                 LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn]);
             }
             break;
@@ -275,8 +275,6 @@ void* CANTFSHost::ReceiveThread()
 
             //Authenticate success,then go to download
         case ANTFS_RESPONSE_AUTHENTICATE_PASS:
-//            eReturn = hostImp_.Download(0,0,MAX_DATA_SIZE);
-//            LOG4CXX_DEBUG(logger,"ANTFS Function Download Return:" << szANTFS_RETURN[eReturn]);
             eReturn = hostImp_.ManualTransfer(0xffff,0,1,szPid_Product_Rqst);
             LOG4CXX_DEBUG(logger,"ANTFS Function ManualTransfer Return:" << szANTFS_RETURN[eReturn]);
 
