@@ -165,6 +165,7 @@ void CANTFSHost::display_product_info(ULONG ulLength,UCHAR *pData)
     LOG4CXX_INFO(logger,"   ID: " << (int)pProduct->product_id);
     LOG4CXX_INFO(logger,"   software_version:  "        << (unsigned int)(pProduct->software_version));
     LOG4CXX_INFO(logger,"   product_description:  "     << (pProduct->product_description));
+    LOG4CXX_INFO(logger,"   last word is:  "     << (char *)&pData[ulLength-2]);
 
 
 }
@@ -179,6 +180,7 @@ static const char* const szANTFS_RETURN[] =
 void* CANTFSHost::ReceiveThread()
 {
     BOOL bExit=FALSE;
+    BOOL bReturn;
     ANTFS_RESPONSE response;
     ULONG ulLength,ulNumberOfEntries;
     UCHAR ucBuffer[1024*100];
@@ -281,8 +283,27 @@ void* CANTFSHost::ReceiveThread()
             break;
         case ANTFS_RESPONSE_MANUAL_TRANSFER_PASS:
             LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
-            hostImp_.GetTransferData(&ulLength,ucBuffer);
+
+            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
             display_product_info(ulLength,ucBuffer);
+
+            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
+
+            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
+
+            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
+
+            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
+            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
+
+
 
             break;
         case ANTFS_RESPONSE_DOWNLOAD_PASS:
