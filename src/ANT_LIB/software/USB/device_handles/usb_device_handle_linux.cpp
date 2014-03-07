@@ -30,7 +30,7 @@
 using namespace std;
 #include "usb_device_handle.hpp"
 
-#include <libusb.h>
+#include <libusb-1.0/libusb.h>
 
 USBError::Enum get_USBError_by_libusb(int libusb_err)
 {

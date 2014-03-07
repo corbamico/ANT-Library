@@ -28,12 +28,7 @@ AC_PROG_RANLIB
 # Checks for libraries.
 AC_CHECK_LIB(pthread, pthread_create)
 AC_CHECK_LIB(usb-1.0, libusb_init)
-AC_CHECK_LIB(log4cxx, _init)
 
-PKG_PROG_PKG_CONFIG()
-PKG_CHECK_MODULES([LIBUSB], [libusb-1.0])
-AC_SUBST(LIBUSB_CFLAGS)
-AC_SUBST(LIBUSB_LIBS)
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h limits.h paths.h stdint.h stdlib.h string.h sys/file.h sys/ioctl.h sys/param.h sys/time.h termios.h unistd.h])

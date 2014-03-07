@@ -14,15 +14,12 @@
 
 .deps
 *.log
-src/aclocal.m4
 src/AUTHORS
 src/autom4te.cache
 src/ChangeLog
 src/config.h.in~
 src/COPYING
-src/depcomp
 src/INSTALL
-src/install-sh
 src/missing
 src/NEWS
 src/README

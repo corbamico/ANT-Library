@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libantfs.a
 
-LIBANTFS_INC = @LIBUSB_CFLAGS@\
+LIBANTFS_INC = \
 	-Iinc \
 	-Icommon \
 	-Isoftware/ANTFS \

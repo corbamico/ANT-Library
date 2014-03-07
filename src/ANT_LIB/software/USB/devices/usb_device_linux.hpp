@@ -28,7 +28,7 @@
 #include "macros.h"
 #include "usb_device.hpp"
 #include <string.h>
-#include <libusb.h>
+#include <libusb-1.0/libusb.h>
 
 class USBDeviceLinux: public USBDevice
 {
