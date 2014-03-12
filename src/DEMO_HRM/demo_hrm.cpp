@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <glog/glog.h>
+
 
 //include log4cxx header files.
 #include <log4cxx/logger.h>
