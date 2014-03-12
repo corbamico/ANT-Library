@@ -14,19 +14,9 @@
 
 .deps
 *.log
-src/AUTHORS
-src/autom4te.cache
-src/ChangeLog
-src/config.h.in~
-src/COPYING
-src/INSTALL
-src/missing
-src/NEWS
-src/README
-src/project
-src/config.log
-src/config.status
-src/stamp-h1
 
+
+build/*
+!Makefile
 demo_antfs
 demo_hrm
