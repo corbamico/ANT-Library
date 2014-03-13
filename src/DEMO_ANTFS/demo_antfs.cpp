@@ -27,21 +27,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-//include log4cxx header files.
-#include <log4cxx/logger.h>
-#include <log4cxx/basicconfigurator.h>
-#include <log4cxx/propertyconfigurator.h>
-#include <log4cxx/helpers/exception.h>
-
-#include <string>
-#include <sstream>
-#include <iomanip>
-using namespace std;
-
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-
-LoggerPtr logger(Logger::getLogger("demo antfs"));
+#include <glog/logging.h>
 
 
 class CANTFSHost
@@ -138,17 +124,17 @@ BOOL  CANTFSHost::getFoundDeviceInfo()
 
 void CANTFSHost::display_watch_info()
 {
-    LOG4CXX_INFO(logger,"Found Device: " << aucFriendlyName_);
-    LOG4CXX_INFO(logger,"   ANT Device Number: " << (int)usDeviceNumber_);
-    LOG4CXX_INFO(logger,"   Device ID:  "        << (unsigned int)(stDeviceParameters_.ulDeviceID));
-    LOG4CXX_INFO(logger,"   Manufacturer ID:  "  << int(stDeviceParameters_.usManufacturerID));
-    LOG4CXX_INFO(logger,"   Device Type: "       << int(stDeviceParameters_.usDeviceType));
-    LOG4CXX_INFO(logger,"   Authentication Type: " << int(stDeviceParameters_.ucAuthenticationType));
-    LOG4CXX_INFO(logger,"     Has New Data: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_DATA_AVAILABLE_BIT ));
-    LOG4CXX_INFO(logger,"     Has Paring: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_PAIRING_ENABLED_BIT ));
-    LOG4CXX_INFO(logger,"     Has Upload Enable: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_UPLOAD_ENABLED_BIT ));
-    LOG4CXX_INFO(logger,"     Beacon Channel Period: " << int(stDeviceParameters_.ucStatusByte1 & 0x07 ) << "Hz");
-    LOG4CXX_INFO(logger,"     Client status: (" << int(stDeviceParameters_.ucStatusByte2 & 0x03 ) << ")" << szANTFS_CLIENT_DEVICE_STATUS[(stDeviceParameters_.ucStatusByte2 & 0x03 )]);
+	LOG(INFO) << "Found Device: " << aucFriendlyName_;
+    LOG(INFO) << "   ANT Device Number: " << (int)usDeviceNumber_;
+    LOG(INFO) << "   Device ID:  "        << (unsigned int)(stDeviceParameters_.ulDeviceID);
+    LOG(INFO) << "   Manufacturer ID:  "  << int(stDeviceParameters_.usManufacturerID);
+    LOG(INFO) << "   Device Type: "       << int(stDeviceParameters_.usDeviceType);
+    LOG(INFO) << "   Authentication Type: " << int(stDeviceParameters_.ucAuthenticationType);
+    LOG(INFO) << "     Has New Data: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_DATA_AVAILABLE_BIT );
+    LOG(INFO) << "     Has Paring: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_PAIRING_ENABLED_BIT );
+    LOG(INFO) << "     Has Upload Enable: " << int(stDeviceParameters_.ucStatusByte1 & ANTFS_STATUS1_UPLOAD_ENABLED_BIT );
+    LOG(INFO) << "     Beacon Channel Period: " << int(stDeviceParameters_.ucStatusByte1 & 0x07 ) << "Hz";
+    LOG(INFO) << "     Client status: (" << int(stDeviceParameters_.ucStatusByte2 & 0x03 ) << ")" << szANTFS_CLIENT_DEVICE_STATUS[(stDeviceParameters_.ucStatusByte2 & 0x03 )];
 }
 
 typedef struct
@@ -161,13 +147,11 @@ typedef struct
 void CANTFSHost::display_product_info(ULONG ulLength,UCHAR *pData)
 {
     Product_Data_Type* pProduct = (Product_Data_Type*)pData;
-    LOG4CXX_INFO(logger,"Garmin Product Device: " << aucFriendlyName_);
-    LOG4CXX_INFO(logger,"   ID: " << (int)pProduct->product_id);
-    LOG4CXX_INFO(logger,"   software_version:  "        << (unsigned int)(pProduct->software_version));
-    LOG4CXX_INFO(logger,"   product_description:  "     << (pProduct->product_description));
-    LOG4CXX_INFO(logger,"   last word is:  "     << (char *)&pData[ulLength-2]);
-
-
+    LOG(INFO) << "Garmin Product Device: " << aucFriendlyName_;
+    LOG(INFO) << "   ID: " << (int)pProduct->product_id;
+    LOG(INFO) << "   software_version:  "        << (unsigned int)(pProduct->software_version);
+    LOG(INFO) << "   product_description:  "     << (pProduct->product_description);
+    LOG(INFO) << "   last word is:  "     << (char *)&pData[ulLength-2];
 }
 
 
@@ -245,7 +229,7 @@ void* CANTFSHost::ReceiveThread()
             hostImp_.AddSearchDevice(&stSearchMask,&stSearchParameters);
 
             eReturn = hostImp_.SearchForDevice(FR_410_SEARCH_FREQ,FR_410_LINK_FREQ,0,TRUE);
-            LOG4CXX_DEBUG(logger,"Search for device, Return:" << szANTFS_RETURN[eReturn]);
+            LOG(INFO) << "Search for device, Return:" << szANTFS_RETURN[eReturn];
             break;
 
             //connected,then get info,and authenticate
@@ -255,14 +239,14 @@ void* CANTFSHost::ReceiveThread()
 
             //go to auth AUTH_COMMAND_PAIR
             eReturn = hostImp_.Authenticate(AUTH_COMMAND_PAIR,szFriendHostName,sizeof(szFriendHostName),szResponseKey,&ucResponseKeySize,9999);
-            LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn]);
+            LOG(INFO) << "ANTFS Authenticate(AUTH_COMMAND_PAIR) Return:" << szANTFS_RETURN[eReturn];
 
 
 //          if (eReturn==ANTFS_RETURN_FAIL)
             {
                 eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szResponseKey,ucResponseKeySize,NULL,NULL,9999);
                 //eReturn = hostImp_.Authenticate(AUTH_COMMAND_PASSKEY,szPassKey,sizeof(szPassKey),NULL,NULL,9999);
-                LOG4CXX_DEBUG(logger,"ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn]);
+                LOG(INFO) << "ANTFS Authenticate(AUTH_COMMAND_PASSKEY) Return:" << szANTFS_RETURN[eReturn];
             }
             break;
 
@@ -270,38 +254,20 @@ void* CANTFSHost::ReceiveThread()
         case ANTFS_RESPONSE_AUTHENTICATE_REJECT:
         case ANTFS_RESPONSE_AUTHENTICATE_FAIL:
 
-            LOG4CXX_DEBUG(logger,"ANTFS Response Authenticate:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            LOG(INFO) << "ANTFS Response Authenticate:(" << (int)response <<")"<< szANTFS_RESPONSE[response];
             break;
 
             //Authenticate success,then go to download
         case ANTFS_RESPONSE_AUTHENTICATE_PASS:
             eReturn = hostImp_.ManualTransfer(0xffff,0,1,szPid_Product_Rqst);
-            LOG4CXX_DEBUG(logger,"ANTFS Function ManualTransfer Return:" << szANTFS_RETURN[eReturn]);
+            LOG(INFO) << "ANTFS Function ManualTransfer Return:" << szANTFS_RETURN[eReturn];
 
             break;
         case ANTFS_RESPONSE_MANUAL_TRANSFER_PASS:
-            LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            LOG(INFO) << "ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response];
 
             bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
             display_product_info(ulLength,ucBuffer);
-
-            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
-
-            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
-
-            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
-
-            bReturn = hostImp_.GetTransferData(&ulLength,ucBuffer);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Return:" << (int)bReturn);
-            LOG4CXX_DEBUG(logger,"ANTFS GetTransferData Length:" << ulLength);
-
-
 
             break;
         case ANTFS_RESPONSE_DOWNLOAD_PASS:
@@ -311,8 +277,8 @@ void* CANTFSHost::ReceiveThread()
             ulNumberOfEntries = (ulLength - sizeof(ANTFS_DIRECTORY_HEADER))/sizeof(ANTFSP_DIRECTORY);
 
 
-            LOG4CXX_DEBUG(logger,"ANTFS Directory Version: " << (int)(stHeader->ucVersion) );
-            LOG4CXX_DEBUG(logger,"ANTFS Directory Number Entry: " << (int)(ulNumberOfEntries) );
+            LOG(INFO) << "ANTFS Directory Version: " << (int)(stHeader->ucVersion) ;
+            LOG(INFO) << "ANTFS Directory Number Entry: " << (int)(ulNumberOfEntries) ;
 
             break;
 
@@ -322,7 +288,7 @@ void* CANTFSHost::ReceiveThread()
             bExit = TRUE;
 
         default:
-            LOG4CXX_DEBUG(logger,"ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response]);
+            LOG(INFO) << "ANTFS Response:(" << (int)response <<")"<< szANTFS_RESPONSE[response];
         }
     }
     return NULL;
@@ -337,14 +303,12 @@ BOOL CANTFSHost::init()
     BOOL bReturn;
     ANTFS_RETURN eReturn;
 
-    log4cxx::PropertyConfigurator::configure("log4cxx.properties");
-
 #ifdef DEBUG_FILE
     hostImp_.SetDebug(TRUE);
 #endif
 
     bReturn = hostImp_.Init(0,57600);
-    LOG4CXX_DEBUG(logger,"ANTFS Init Return:" << (int)bReturn);
+    LOG(INFO) << "ANTFS Init Return:" << (int)bReturn;
 
     dsiThreadID_ = DSIThread_CreateThread(ReceiveThread_helper,this);
 
@@ -361,9 +325,10 @@ BOOL CANTFSHost::run()
     return TRUE;
 }
 
-int main(void)
+int main(int argc,char *argv[])
 {
-
+	FLAGS_alsologtostderr = true;
+	google::InitGoogleLogging(argv[0]);
     {
         CANTFSHost host;
         host.init();

@@ -23,14 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <glog/glog.h>
-
-
-//include log4cxx header files.
-#include <log4cxx/logger.h>
-#include <log4cxx/basicconfigurator.h>
-#include <log4cxx/propertyconfigurator.h>
-#include <log4cxx/helpers/exception.h>
+#include <glog/logging.h>
 
 
 #define MAX_CHANNEL_EVENT_SIZE   (MESG_MAX_SIZE_VALUE)     // Channel event buffer size, assumes worst case extended message size
@@ -58,11 +51,6 @@
 #define HRM_DEVICETYPE   0x78
 #define HRM_RFFREQUENCY  0x39   //Set the RF frequency to channel 57 - 2.457GHz
 #define HRM_MESSAGEPERIOD  8070    //Set the message period to 8070 counts specific for the HRM
-using namespace log4cxx;
-using namespace log4cxx::helpers;
-
-LoggerPtr logger(Logger::getLogger("demo"));
-
 
 
 //this class for ANT+ Slave
@@ -109,9 +97,6 @@ CANTSlave* CANTSlave::pThis = NULL;
 
 BOOL CANTSlave::init()
 {
-    log4cxx::PropertyConfigurator::configure("log4cxx.properties");
-    //BasicConfigurator::configure();
-
     ANT_Init(0,57600);
     ANT_AssignResponseFunction(CANTSlave::response_callback, CANTSlave::aucResponseBuffer);
     ANT_AssignChannelEventFunction(USER_ANTCHANNEL,CANTSlave::channel_callback, CANTSlave::aucChannelBuffer);
@@ -144,25 +129,25 @@ void* CANTSlave::mainloop(void)
 BOOL CANTSlave::channel_callback(UCHAR ucChannel_, UCHAR ucEvent_)
 {
     UCHAR ucBPM=0;
-    LOG4CXX_DEBUG(logger,"Rx Channel Event:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+    LOG(INFO) << "Rx Channel Event:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_;
 
     switch(ucEvent_)
     {
     case EVENT_RX_FLAG_ACKNOWLEDGED:
     case EVENT_RX_FLAG_BURST_PACKET:
     case EVENT_RX_FLAG_BROADCAST:
-        LOG4CXX_DEBUG(logger,"Rx Channel [FLAG]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        LOG(INFO) << "Rx Channel [FLAG]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_;
         break;
 
     case EVENT_RX_ACKNOWLEDGED:
     case EVENT_RX_BURST_PACKET:
     case EVENT_RX_BROADCAST:
-        LOG4CXX_DEBUG(logger,"Rx Channel [DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        LOG(INFO) << "Rx Channel [DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_;
         ucBPM = decode_hrm_msg(aucChannelBuffer+MESSAGE_BUFFER_DATA2_INDEX);
 
         if(ucBPM)
         {
-            LOG4CXX_INFO(logger,"BPM:" << (int)ucBPM);
+            LOG(INFO) << "BPM:" << (int)ucBPM;
         }
 
         break;
@@ -170,7 +155,7 @@ BOOL CANTSlave::channel_callback(UCHAR ucChannel_, UCHAR ucEvent_)
     case EVENT_RX_EXT_ACKNOWLEDGED:
     case EVENT_RX_EXT_BURST_PACKET:
     case EVENT_RX_EXT_BROADCAST:
-        LOG4CXX_DEBUG(logger,"Rx Channel [EX DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_);
+        LOG(INFO) << "Rx Channel [EX DATA]:"<<(int)ucEvent_<<",channel:"<<(int)ucChannel_;
         break;
     }
 
@@ -178,7 +163,7 @@ BOOL CANTSlave::channel_callback(UCHAR ucChannel_, UCHAR ucEvent_)
 }
 BOOL CANTSlave::response_callback(UCHAR ucChannel_, UCHAR ucMessageId_)
 {
-    LOG4CXX_DEBUG(logger,"Rx Call Response:"<<(int)ucMessageId_<<",channel:"<<(int)ucChannel_);
+    LOG(INFO) << "Rx Call Response:"<<(int)ucMessageId_<<",channel:"<<(int)ucChannel_;
     switch(ucMessageId_)
     {
     case MESG_RESPONSE_EVENT_ID:
@@ -194,7 +179,7 @@ BOOL CANTSlave::response_callback(UCHAR ucChannel_, UCHAR ucMessageId_)
 
 BOOL CANTSlave::hrm_init(UCHAR ucMessageId_,UCHAR ucResult_)
 {
-    LOG4CXX_DEBUG(logger,"Rx Call Response(MESG_RESPONSE_EVENT_ID):"<<(int)ucMessageId_<<",Result:"<<(int)ucResult_);
+    LOG(INFO) << "Rx Call Response(MESG_RESPONSE_EVENT_ID):"<<(int)ucMessageId_<<",Result:"<<(int)ucResult_;
 
     if(RESPONSE_NO_ERROR!=ucResult_)
     {
@@ -254,9 +239,10 @@ UCHAR CANTSlave::decode_hrm_msg(UCHAR data[8])
     return 0;
 }
 
-int main(void)
+int main(int argc,char * argv[])
 {
-
+	FLAGS_alsologtostderr = true;
+	google::InitGoogleLogging(argv[0]);	
     {
         CANTSlave slave;
         slave.init();
