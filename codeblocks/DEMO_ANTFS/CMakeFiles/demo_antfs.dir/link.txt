@@ -1,0 +1,1 @@
+/usr/bin/c++       CMakeFiles/demo_antfs.dir/demo_antfs.cpp.o  -o demo_antfs  -L/home/picuntu/github/ANT-Library/codeblocks/ANT_LIB -rdynamic ../ANT_LIB/libant.a -lpthread -lusb-1.0 -lglog -Wl,-rpath,/home/picuntu/github/ANT-Library/codeblocks/ANT_LIB 

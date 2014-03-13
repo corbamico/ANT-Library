@@ -1,6 +1,6 @@
 /*
  * demo_hrm.cpp
- * 
+ *
  * Copyright 2014 corbamico <corbamico@163.com>
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -62,7 +62,7 @@ public:
 
     static void *mainloop_helper(void *context)
     {
-        pThis = (CANTSlave*)context;
+        pThis = static_cast<CANTSlave*>(context);
         return pThis->mainloop();
     }
 public:
@@ -242,7 +242,8 @@ UCHAR CANTSlave::decode_hrm_msg(UCHAR data[8])
 int main(int argc,char * argv[])
 {
 	FLAGS_alsologtostderr = true;
-	google::InitGoogleLogging(argv[0]);	
+	google::InitGoogleLogging(argv[0]);
+
     {
         CANTSlave slave;
         slave.init();

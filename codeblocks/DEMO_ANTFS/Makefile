@@ -39,13 +39,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/cmake-gui
+CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
 CMAKE_SOURCE_DIR = /home/picuntu/github/ANT-Library/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/picuntu/github/ANT-Library/build
+CMAKE_BINARY_DIR = /home/picuntu/github/ANT-Library/codeblocks
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -53,7 +53,7 @@ CMAKE_BINARY_DIR = /home/picuntu/github/ANT-Library/build
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/cmake-gui -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -72,14 +72,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/picuntu/github/ANT-Library/build/CMakeFiles /home/picuntu/github/ANT-Library/build/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/picuntu/github/ANT-Library/build/CMakeFiles 0
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(CMAKE_COMMAND) -E cmake_progress_start /home/picuntu/github/ANT-Library/codeblocks/CMakeFiles /home/picuntu/github/ANT-Library/codeblocks/DEMO_ANTFS/CMakeFiles/progress.marks
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f CMakeFiles/Makefile2 DEMO_ANTFS/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/picuntu/github/ANT-Library/codeblocks/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f CMakeFiles/Makefile2 DEMO_ANTFS/clean
 .PHONY : clean
 
 # The main clean target
@@ -88,57 +88,56 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f CMakeFiles/Makefile2 DEMO_ANTFS/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f CMakeFiles/Makefile2 DEMO_ANTFS/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named ant
+# Convenience name for target.
+DEMO_ANTFS/CMakeFiles/demo_antfs.dir/rule:
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f CMakeFiles/Makefile2 DEMO_ANTFS/CMakeFiles/demo_antfs.dir/rule
+.PHONY : DEMO_ANTFS/CMakeFiles/demo_antfs.dir/rule
 
-# Build rule for target.
-ant: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ant
-.PHONY : ant
-
-# fast build rule for target.
-ant/fast:
-	$(MAKE) -f ANT_LIB/CMakeFiles/ant.dir/build.make ANT_LIB/CMakeFiles/ant.dir/build
-.PHONY : ant/fast
-
-#=============================================================================
-# Target rules for targets named demo_hrm
-
-# Build rule for target.
-demo_hrm: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 demo_hrm
-.PHONY : demo_hrm
-
-# fast build rule for target.
-demo_hrm/fast:
-	$(MAKE) -f DEMO_HRM/CMakeFiles/demo_hrm.dir/build.make DEMO_HRM/CMakeFiles/demo_hrm.dir/build
-.PHONY : demo_hrm/fast
-
-#=============================================================================
-# Target rules for targets named demo_antfs
-
-# Build rule for target.
-demo_antfs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 demo_antfs
+# Convenience name for target.
+demo_antfs: DEMO_ANTFS/CMakeFiles/demo_antfs.dir/rule
 .PHONY : demo_antfs
 
 # fast build rule for target.
 demo_antfs/fast:
-	$(MAKE) -f DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build.make DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build.make DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build
 .PHONY : demo_antfs/fast
+
+demo_antfs.o: demo_antfs.cpp.o
+.PHONY : demo_antfs.o
+
+# target to build an object file
+demo_antfs.cpp.o:
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build.make DEMO_ANTFS/CMakeFiles/demo_antfs.dir/demo_antfs.cpp.o
+.PHONY : demo_antfs.cpp.o
+
+demo_antfs.i: demo_antfs.cpp.i
+.PHONY : demo_antfs.i
+
+# target to preprocess a source file
+demo_antfs.cpp.i:
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build.make DEMO_ANTFS/CMakeFiles/demo_antfs.dir/demo_antfs.cpp.i
+.PHONY : demo_antfs.cpp.i
+
+demo_antfs.s: demo_antfs.cpp.s
+.PHONY : demo_antfs.s
+
+# target to generate assembly for a file
+demo_antfs.cpp.s:
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(MAKE) -f DEMO_ANTFS/CMakeFiles/demo_antfs.dir/build.make DEMO_ANTFS/CMakeFiles/demo_antfs.dir/demo_antfs.cpp.s
+.PHONY : demo_antfs.cpp.s
 
 # Help Target
 help:
@@ -146,11 +145,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... demo_antfs"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ant"
-	@echo "... demo_hrm"
-	@echo "... demo_antfs"
+	@echo "... demo_antfs.o"
+	@echo "... demo_antfs.i"
+	@echo "... demo_antfs.s"
 .PHONY : help
 
 
@@ -162,6 +162,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/picuntu/github/ANT-Library/codeblocks && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

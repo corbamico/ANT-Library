@@ -46,7 +46,7 @@ private:
     void* ReceiveThread();
     static void * ReceiveThread_helper(void* context)
     {
-        CANTFSHost* pHost = (CANTFSHost*)context;
+        CANTFSHost* pHost = static_cast<CANTFSHost*>(context);
         return pHost->ReceiveThread();
     }
     BOOL getFoundDeviceInfo();

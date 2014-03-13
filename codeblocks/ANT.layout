@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="all" />
+	<File name="../src/ANT_LIB/software/ANTFS/antfs_client_channel.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="39690" topLine="1150" />
+		</Cursor>
+	</File>
+	<File name="../src/ANT_LIB/software/USB/device_handles/usb_device_handle_linux.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="989" topLine="271" />
+		</Cursor>
+	</File>
+	<File name="../src/ANT_LIB/software/system/dsi_timer.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3381" topLine="92" />
+		</Cursor>
+	</File>
+	<File name="../src/DEMO_HRM/demo_hrm.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6620" topLine="210" />
+		</Cursor>
+	</File>
+	<File name="../src/ANT_LIB/CMakeLists.txt" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="227" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="../src/DEMO_ANTFS/demo_antfs.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1355" topLine="33" />
+		</Cursor>
+	</File>
+</CodeBlocks_layout_file>
