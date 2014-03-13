@@ -1,3 +1,0 @@
-/home/picuntu/github/ANT-Library/codeblocks/ANT_LIB/CMakeFiles/ant.dir
-/home/picuntu/github/ANT-Library/codeblocks/DEMO_ANTFS/CMakeFiles/demo_antfs.dir
-/home/picuntu/github/ANT-Library/codeblocks/DEMO_HRM/CMakeFiles/demo_hrm.dir
