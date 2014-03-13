@@ -30,8 +30,8 @@ COMPILE REQUIREMENTS:
 -------
 Software :
 
-   + codeblocks
-<pre><code>sudo apt-get install codeblocks
+   + cmake
+<pre><code>sudo apt-get install cmake
 </code></pre>
 
 Dependances :
@@ -44,17 +44,9 @@ Dependances :
 
 Compile :
 ---------
-   + Download official source code from http://www.thisisant.com/developer/resources/downloads
-   + Copy this repo code into directoy ANT_LIB
-   + Modify Code in antfsmessage.h
-   <code>#define NETWORK_KEY                    {0xa8, 0xa4, 0x23, 0xb9, 0xf5, 0x5e, 0x63, 0xc1} </code>
-   + Modify code in dsi_thread_posix.c
-   <code>#if defined(DSI_TYPES_MACINTOSH) || defined(DSI_TYPES_LINUX)</code>
    + Compile:
-     - open libant_static.cbp/libant_dylib.cbp by codeblocks
-     - build it
-
-You should autoreconf in your computer since maybe different CPU&different Linux version
+     - cd build
+     - make
 
 DEMO
 ---------
